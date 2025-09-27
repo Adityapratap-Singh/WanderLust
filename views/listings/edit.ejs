@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Listing</title>
+</head>
+<body>
+    <h1>Edit Listing</h1>
+    <form action="/listings/<%= foundListing._id %>?_method=PUT" method="POST">
+        <input type="text" name="title" required value="<%= foundListing.title %>"> <br>
+        <textarea name="description" placeholder="Enter Description" required><%= foundListing.description %></textarea> <br>
+        <input type="number" name="price" required value="<%= foundListing.price %>"> <br>
+        <input type="text" name="image" value="<%= foundListing.image %>"> <br>
+        <input type="text" name="location" required value="<%= foundListing.location %>"> <br>
+        <input type="text" name="country" required value="<%= foundListing.country %>"> <br>
+        <button type="submit">Update Listing</button>
+    </form>
+</body>
+</html>
