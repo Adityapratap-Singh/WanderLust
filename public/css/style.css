@@ -21,3 +21,40 @@ a{
     color: black !important;
     font: 400;
 }
+
+/* Footer */
+.f-info{
+    display: flex;
+    height: 8rem;
+    border-top: 2px solid #786c6c;
+    align-items: center;
+    justify-content: center;
+    align-items: space-around;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.f-info-links, 
+.f-info-socials,
+.f-info-brand {
+    width: 100%;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.f-info-socials i{
+    margin-right: 1rem;
+    font-size: 1.3rem;
+}
+
+.f-info-links a{
+    text-decoration: none;
+    color: #222222 !important;
+}
+
+.f-info-links a:hover{
+    text-decoration: underline;
+}
