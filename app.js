@@ -5,6 +5,9 @@ const ejs = require('ejs');
 const listing = require('./models/listing');
 const path = require('path');
 const methodOverride = require('method-override');
+const ejsMate = require('ejs-mate');
+
+
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -14,6 +17,10 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));   // enables PUT & DELETE via ?_method=
+
+// ejs-locals for all ejs templates:
+app.engine('ejs', ejsMate);
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/wonderlust')
@@ -76,5 +83,5 @@ app.get('/listings/:id', async (req, res) => {
 
 // Server start
 app.listen(8080, () => {
-    console.log('Server is running on port 8080');
+    console.log('Server is running on port http://localhost:8080/listings');
 });
