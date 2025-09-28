@@ -1,5 +1,8 @@
 body{
     background-color: thistle;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 a{
     color: darkblue;
@@ -25,8 +28,9 @@ a{
 /* Footer */
 .f-info{
     display: flex;
-    height: 8rem;
+    height: 6rem;
     border-top: 2px solid #786c6c;
+    background-color: #e385ec;
     align-items: center;
     justify-content: center;
     align-items: space-around;
@@ -101,4 +105,30 @@ a{
     opacity: 0.2;
     transition: all 0.3s ease-in-out;
     border-radius: 1rem;
+}
+
+/* boilerplate container */
+.container{
+    flex: 1;
+}
+
+/* Show.ejs operation */
+.operation1{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 20px;
+}
+
+.operation{
+    display: flex;
+    align-items: end;
+    text-align: end;
+    justify-content: end;
+}
+
+.op{
+    justify-content: space-between;
+    margin-right: 3rem;
+    margin-bottom: 10px;
 }

@@ -1,12 +1,36 @@
 <% layout("layouts/boilerPlate") %>
-<body>
-    <h1>Add new Listing</h1>
-    <form method="POST" action="/listings">
-        <input type="text" name="title" required placeholder="Enter Title"> <br>
-        <textarea type="text" name="description" placeholder="Enter Description" required ></textarea> <br>
-        <input type="number" name="price" placeholder="Price" required> <br>
-        <input type="text" name="image" placeholder="Image URL"> <br>
-        <input type="text" name="location" placeholder="Location" required> <br>
-        <input type="text" name="country" placeholder="country" required> <br>
-        <button type="submit">Create Listing</button>
-</body>
+<div class="row">
+    <div class="col-8 offset-2">
+        <h1>Add new Listing</h1>
+        <form method="POST" action="/listings">
+        <div class="mb-3">
+            <label for="title" Class="form-label">Enter Title</label>
+            <input type="text" name="title" required placeholder="Enter Title" class="form-control"> 
+        </div>
+        <div class="mb-3">
+            <label for="description" Class="form-label">Enter Description</label>
+            <textarea type="text" name="description" placeholder="Enter Description" class="form-control" required ></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="image" Class="form-label">Image URL</label>
+            <input type="text" name="image" placeholder="Image URL" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="location" Class="form-label">Location:</label>
+            <input type="text" name="location" placeholder="Location" required class="form-control">
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-8">
+                <label for="price" Class="form-label">Enter Price</label>
+                <input type="number" name="price" placeholder="Price" class="form-control" required>
+            </div>
+            <div class="mb-3 col-md-4">
+                <label for="country" Class="form-label">Country</label>
+                <input type="text" name="country" placeholder="country" class="form-control" required>
+            </div>
+        </div>
+        <br>
+        <button class="btn btn-danger" style="border: none;">Create Listing</button>
+        <br>
+    </div>
+</div>

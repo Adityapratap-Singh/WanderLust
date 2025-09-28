@@ -1,13 +1,37 @@
 <% layout("layouts/boilerPlate") %>
-<body>
-    <h1>Edit Listing</h1>
-    <form action="/listings/<%= foundListing._id %>?_method=PUT" method="POST">
-        <input type="text" name="title" required value="<%= foundListing.title %>"> <br>
-        <textarea name="description" placeholder="Enter Description" required><%= foundListing.description %></textarea> <br>
-        <input type="number" name="price" required value="<%= foundListing.price %>"> <br>
-        <input type="text" name="image" value="<%= foundListing.image %>"> <br>
-        <input type="text" name="location" required value="<%= foundListing.location %>"> <br>
-        <input type="text" name="country" required value="<%= foundListing.country %>"> <br>
-        <button type="submit">Update Listing</button>
-    </form>
-</body>
+
+<div class="row">
+    <div class="col-8 offset-2">
+        <h1>Edit Listing</h1>
+        <form method="POST" action="/listings/<%= foundListing._id %>?_method=PUT">
+        <div class="mb-3">
+            <label for="title" Class="form-label">Enter Title</label>
+            <input type="text" name="title" value="<%= foundListing.title %>" placeholder="Enter Title" class="form-control" required> 
+        </div>
+        <div class="mb-3">
+            <label for="description" Class="form-label">Enter Description</label>
+            <textarea name="description" placeholder="Enter Description" class="form-control" required><%= foundListing.description %></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="image" Class="form-label">Image URL</label>
+            <input type="text" name="image" placeholder="Image URL" value="<%= foundListing.image %>" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="location" Class="form-label">Location:</label>
+            <input type="text" name="location" placeholder="Location" value="<%= foundListing.location %>" required class="form-control">
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-8">
+                <label for="country" Class="form-label">Country</label>
+                <input type="text" name="country" placeholder="country" value="<%= foundListing.country %>" class="form-control" required>
+            </div>
+            <div class="mb-3 col-md-4">
+                <label for="price" Class="form-label">Enter Price</label>
+                <input type="number" name="price" placeholder="Price" value="<%= foundListing.price %>" class="form-control" required>
+            </div>
+        </div>
+        <br>
+        <button class="btn btn-danger" style="border: none;">Edit & Save</button>
+        <br>
+    </div>
+</div>
