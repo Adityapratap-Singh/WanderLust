@@ -4,3 +4,20 @@ body{
 a{
     color: darkblue;
 }
+
+/* Navbar */
+.navbar{
+    height: 5rem;
+    backdrop-filter: blur(10rem);
+}
+
+.fa-street-view{
+    color: #f14753;
+    font-size: 2rem;
+}
+.nav-link{
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    color: black !important;
+    font: 400;
+}
