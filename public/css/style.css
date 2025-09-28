@@ -58,3 +58,47 @@ a{
 .f-info-links a:hover{
     text-decoration: underline;
 }
+
+/* Cards */
+.card{
+    border: none ;
+    margin-bottom: 2rem;
+    margin: 5px;
+    padding: .5%;
+    width: 100% !important;
+}
+
+.card-img-top{
+    border-radius: 1rem;
+    width: 100% !important;
+    object-fit: cover;
+    border-radius: 1%;
+}
+
+.card-body{
+    padding: 0 !important;
+}
+
+.card-text{
+    font-weight: 400 !important;
+    font-family: "Plus Jakarta Sans", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-style: normal !important;
+}
+
+.listing-link{
+    text-decoration: none;
+}
+
+/* card effect */
+
+.card-img-overlay{
+    opacity: 0;
+}
+
+.card:hover .card-img-overlay{
+    background-color: rgb(255, 255, 255);
+    opacity: 0.2;
+    transition: all 0.3s ease-in-out;
+    border-radius: 1rem;
+}
