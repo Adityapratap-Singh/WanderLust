@@ -45,11 +45,15 @@ app.get('/listings/new', (req, res) => {
 });
 
 // Create route – handle new listing submission
-app.post('/listings', async (req, res) => {
-    const newListing = new listing(req.body);
-    await newListing.save();
-    console.log("New listing created:", newListing);
-    res.redirect('/listings');
+app.post('/listings', async (req, res, next) => {
+    try{
+        const newListing = new listing(req.body);
+        await newListing.save();
+        console.log("New listing created:", newListing);
+        res.redirect('/listings');
+    } catch(err) {
+        next();
+    }
 });
 
 // Edit route – form for editing a listing
@@ -80,6 +84,10 @@ app.get('/listings/:id', async (req, res) => {
     const { id } = req.params;
     const foundListing = await listing.findById(id);
     res.render('listings/show.ejs', { foundListing });
+});
+
+app.use((err, req, res, next) => {
+    res.send("Something went wrong! ")
 });
 
 // Server start
