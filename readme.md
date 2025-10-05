@@ -110,138 +110,65 @@ Example document:
 ```json
 {
 	"title": "Cozy Beachfront Cottage",
-	# WanderLust
+	"description": "Escape to this charming beachfront cottage...",
+	"image": "https://example.com/img.jpg",
+	"price": 1500,
+	"country": "United States"
+}
+```
 
-	An Express + EJS starter app for creating, viewing, editing, and deleting travel listings. Data is persisted in MongoDB via Mongoose. This README is updated to reflect the current codebase and includes setup, seeding, routes, and a short changelog of fixes.
+## Project structure
 
-	## What this project contains
+```
+.
+├─ app.js               # main Express application
+├─ package.json
+├─ readme.md
+├─ init/
+│  ├─ index.js          # seed script that inserts sample data
+│  └─ data.js           # sample listing objects
+├─ models/
+│  └─ listing.js        # Mongoose Listing model
+├─ public/              # static assets (css, images)
+└─ views/
+	 ├─ layouts/
+	 └─ listings/         # EJS templates (index, new, edit, show)
+```
 
-	- Main app: `app.js` (Express server and routes)
-	- Mongoose model: `models/listing.js`
-	- Views: `views/` (EJS templates). Layout: `views/layouts/boilerPlate.ejs`.
-	- Static assets: `public/` (CSS and client JS)
-	- Seed data & script: `init/data.js` and `init/index.js`
-	- Small helpers: `utils/wrapAsync.js`, `utils/expressError.js`
+## Examples (curl / PowerShell)
 
-	## Prerequisites
+Create a listing (form-style POST):
 
-	- Node.js (v16+ recommended; tested with Node 22)
-	- npm
-	- MongoDB (local or Atlas)
+```powershell
+curl -X POST http://localhost:8080/listings -d "title=Beach%20House&description=Sea%20view&price=250&country=Spain"
+```
 
-	## Install
+Update a listing (method override):
 
-	From the project root:
+```powershell
+curl -X POST "http://localhost:8080/listings/<LISTING_ID>?_method=PUT" -d "title=Updated%20title&price=300"
+```
 
-	```powershell
-	npm install
-	```
+Delete a listing (method override):
 
-	## Configuration
+```powershell
+curl -X POST "http://localhost:8080/listings/<LISTING_ID>?_method=DELETE"
+```
 
-	The app reads an optional `MONGO_URI` environment variable. If not present it falls back to the local MongoDB URI:
+Replace `<LISTING_ID>` with the document `_id`.
 
-	```
-	mongodb://localhost:27017/wonderlust
-	```
+## Troubleshooting
 
-	To run with a different URI (PowerShell example):
+- If the server can't connect to MongoDB, ensure MongoDB is running and reachable at the configured URI. Check the console output from `app.js` for the error message.
+- If views don't render, confirm `views/` exists and `app.set('view engine', 'ejs')` is configured (see `app.js`).
 
-	```powershell
-	$env:MONGO_URI = 'mongodb://username:password@host:port/dbname'
-	npm start
-	```
+## Next steps / suggestions
 
-	## Run
+- Move DB connection strings into environment variables (`MONGO_URI`) and load them with a library like `dotenv`.
+- Add form validation, error handling, and user-friendly flash messages.
+- Add automated tests and linting.
 
-	- Production: `npm start` (runs `node app.js`)
-	- Development: `npm run dev` (uses `nodemon`, defined in `package.json`)
+## License
 
-	The app listens on port 8080 by default. Open: http://localhost:8080/listings
-
-	## Seed the database
-
-	Seed the database with the provided sample listings (idempotent check for duplicate titles):
-
-	```powershell
-	node init/index.js
-	```
-
-	This will connect to the same `MONGO_URI` used by the app and insert sample documents where a title does not already exist.
-
-	## Routes (summary)
-
-	- GET `/` — Redirects to `/listings`
-	- GET `/listings` — List all listings (renders `views/listings/index.ejs`)
-	- GET `/listings/new` — Form to create a listing (`views/listings/new.ejs`)
-	- POST `/listings` — Create a listing
-	- GET `/listings/:id` — Show single listing (`views/listings/show.ejs`)
-	- GET `/listings/:id/edit` — Edit form (`views/listings/edit.ejs`)
-	- PUT `/listings/:id` — Update listing (uses `method-override`)
-	- DELETE `/listings/:id` — Remove listing (uses `method-override`)
-
-	Note: HTML forms support only GET/POST; this project uses the `method-override` package (already in `package.json`) to simulate PUT/DELETE via a `_method` field or query string.
-
-	## Data model
-
-	File: `models/listing.js` — Mongoose schema highlights:
-
-	- title: String (required)
-	- description: String (required)
-	- image: String (optional, default placeholder)
-	- price: Number (required)
-	- location, country: String (optional)
-
-	Sample document shape:
-
-	```json
-	{
-	  "title": "Cozy Beachfront Cottage",
-	  "description": "Escape to this charming beachfront cottage...",
-	  "image": "https://...",
-	  "price": 1500,
-	  "country": "United States"
-	}
-	```
-
-	## Files of interest (quick pointers)
-
-	- `app.js` — sets up express, view engine, middleware, and all routes
-	- `models/listing.js` — Mongoose schema and model export
-	- `init/data.js` & `init/index.js` — seed data and seeder script
-	- `views/listings/*.ejs` — list, new, edit and show templates
-	- `public/css/style.css` and `public/js/script.js` — front-end assets
-
-	## Recent fixes applied
-
-	While inspecting and running the app I applied two small, safe fixes to `app.js` so the server starts correctly:
-
-	1. Fixed the edit route which incorrectly passed additional params into `findById`:
-		- Old: `listing.findById(id, description)` — removed the extra `description` param.
-		- New: `listing.findById(id)`
-
-	2. Replaced the invalid catch-all route handler that caused a path-to-regexp error when Express registered `app.all("*")` incorrectly:
-		- Old: `app.all("*", (next) => { next(new expressErrors(404, "Page Not Found")); });` — this signature was wrong and triggered a router error.
-		- New: `app.use((req, res, next) => next(new expressErrors(404, 'Page Not Found')));` plus an improved error handler that supplies defaults for status and message.
-
-	These fixes are limited to `app.js` and don't change public APIs or data formats.
-
-	## Troubleshooting
-
-	- If you see MongoDB connection errors: confirm MongoDB is running and that `MONGO_URI` is correct.
-	- If views fail to render: ensure `views/` exists and EJS is installed (`ejs` is in package.json).
-	- If the server won't start and you get router/path errors: make sure routes use valid path strings and that `app.use`/`app.all` are used with the correct function signatures.
-
-	If you want, I can run the app and fix any remaining runtime errors, add basic tests, or create a CI workflow.
-
-	## Next improvements (suggested)
-
-	- Add input validation (server-side) for create/update endpoints.
-	- Add flash messages and better error pages (rendered EJS templates instead of plain text error responses).
-	- Add unit/integration tests and a small CI workflow.
-	- Consider adding authentication if listings should be owned by users.
-
-	---
-
-	If you'd like I can commit these README changes and/or continue by running the server locally, adding tests, or implementing any of the suggested improvements — tell me which you prefer next.
+This repository does not contain an explicit license. Add a `LICENSE` file if you want to permit reuse.
 
