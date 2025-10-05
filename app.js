@@ -7,6 +7,7 @@ const listing = require('./models/listing');
 const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
+const wrapAsync = require('./utils/wrapAsync')
 
 
 
@@ -45,16 +46,12 @@ app.get('/listings/new', (req, res) => {
 });
 
 // Create route – handle new listing submission
-app.post('/listings', async (req, res, next) => {
-    try{
-        const newListing = new listing(req.body);
-        await newListing.save();
-        console.log("New listing created:", newListing);
-        res.redirect('/listings');
-    } catch(err) {
-        next();
-    }
-});
+app.post('/listings', wrapAsync( async (req, res, next) => {
+    const newListing = new listing(req.body);
+    await newListing.save();
+    console.log("New listing created:", newListing);
+    res.redirect('/listings');
+}));
 
 // Edit route – form for editing a listing
 app.get('/listings/:id/edit', async (req, res) => {
