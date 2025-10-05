@@ -8,6 +8,8 @@ const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const wrapAsync = require('./utils/wrapAsync')
+const expressErrors = require('./utils/expressError');
+const { error } = require('console');
 
 
 
@@ -55,8 +57,8 @@ app.post('/listings', wrapAsync( async (req, res, next) => {
 
 // Edit route – form for editing a listing
 app.get('/listings/:id/edit', async (req, res) => {
-    const { id, description } = req.params;
-    const foundListing = await listing.findById(id, description);
+    const { id } = req.params;
+    const foundListing = await listing.findById(id);
     res.render('listings/edit.ejs', { foundListing });
 });
 
@@ -83,8 +85,17 @@ app.get('/listings/:id', async (req, res) => {
     res.render('listings/show.ejs', { foundListing });
 });
 
+// Catch-all for unknown routes
+app.use((req, res, next) => {
+    next(new expressErrors(404, 'Page Not Found'));
+});
+
+// Error handler
 app.use((err, req, res, next) => {
-    res.send("Something went wrong! ")
+    let { statusCode, message } = err;
+    if (!statusCode) statusCode = 500;
+    if (!message) message = 'Something went wrong';
+    res.status(statusCode).send(message);
 });
 
 // Server start
