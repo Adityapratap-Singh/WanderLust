@@ -3,35 +3,74 @@
 <div class="row">
     <div class="col-8 offset-2">
         <h1>Edit Listing</h1>
-        <form method="POST" action="/listings/<%= foundListing._id %>?_method=PUT">
-        <div class="mb-3">
-            <label for="title" Class="form-label">Enter Title</label>
-            <input type="text" name="title" value="<%= foundListing.title %>" placeholder="Enter Title" class="form-control" required> 
-        </div>
-        <div class="mb-3">
-            <label for="description" Class="form-label">Enter Description</label>
-            <textarea name="description" placeholder="Enter Description" class="form-control" required><%= foundListing.description %></textarea>
-        </div>
-        <div class="mb-3">
-            <label for="image" Class="form-label">Image URL</label>
-            <input type="text" name="image" placeholder="Image URL" value="<%= foundListing.image %>" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="location" Class="form-label">Location:</label>
-            <input type="text" name="location" placeholder="Location" value="<%= foundListing.location %>" required class="form-control">
-        </div>
-        <div class="row">
-            <div class="mb-3 col-md-8">
-                <label for="country" Class="form-label">Country</label>
-                <input type="text" name="country" placeholder="country" value="<%= foundListing.country %>" class="form-control" required>
+        <form method="POST" action="/listings/<%= foundListing._id %>?_method=PUT" novalidate class="needs-validation">
+            <!-- title -->
+            <div class="mb-3">
+                <label for="title" Class="form-label">Enter Title</label>
+                <input type="text" name="title" value="<%= foundListing.title %>" placeholder="Enter Title" class="form-control" required> 
+                <div class="valid-feedback">
+                    Title looks good
+                </div>
+                <div class="invalid-feedback">
+                    Title Missing
+                </div>
             </div>
-            <div class="mb-3 col-md-4">
-                <label for="price" Class="form-label">Enter Price</label>
-                <input type="number" name="price" placeholder="Price" value="<%= foundListing.price %>" class="form-control" required>
+            <!-- Description -->
+            <div class="mb-3">
+                <label for="description" Class="form-label">Enter Description</label>
+                <textarea name="description" placeholder="Enter Description" class="form-control" required><%= foundListing.description %></textarea>
+                <div class="valid-feedback">
+                    Description looks good
+                </div>
+                <div class="invalid-feedback">
+                    Description can be improved
+                </div>
             </div>
-        </div>
-        <br>
-        <button class="btn btn-danger" style="border: none;">Edit & Save</button>
-        <br>
+            <!-- Image -->
+            <div class="mb-3">
+                <label for="image" Class="form-label">Image URL</label>
+                <input type="text" name="image" placeholder="Image URL" value="<%= foundListing.image %>" class="form-control">
+            </div>
+            <!-- Location -->
+            <div class="mb-3">
+                <label for="location" Class="form-label">Location:</label>
+                <input type="text" name="location" placeholder="Location" value="<%= foundListing.location %>" required class="form-control">
+                <div class="valid-feedback">
+                    Location Verified
+                </div>
+                <div class="invalid-feedback">
+                    Location Missing
+                </div>
+            </div>
+            <!-- Countory & Price -->
+            <div class="row">
+                <!-- Countory -->
+                <div class="mb-3 col-md-8">
+                    <label for="country" Class="form-label">Country</label>
+                    <input type="text" name="country" placeholder="country" value="<%= foundListing.country %>" class="form-control" required>
+                    <div class="valid-feedback">
+                        Price is accurate
+                    </div>
+                    <div class="invalid-feedback">
+                        Price Missing
+                    </div>  
+                </div>
+                <!-- Price -->
+                <div class="mb-3 col-md-4">
+                    <label for="price" Class="form-label">Enter Price</label>
+                    <input type="number" name="price" placeholder="Price" value="<%= foundListing.price %>" class="form-control" required>
+                    <div class="valid-feedback">
+                        Valid Country
+                    </div>
+                    <div class="invalid-feedback">
+                        Countory Missing
+                    </div>
+                </div>
+            </div>
+            <!-- Submit Button -->
+            <br>
+            <button class="btn btn-danger" style="border: none;">Edit & Save</button>
+            <br>
+        </form>
     </div>
 </div>

@@ -3,34 +3,74 @@
     <div class="col-8 offset-2">
         <h1>Add new Listing</h1>
         <form method="POST" action="/listings" novalidate class="needs-validation">
+            <!-- Title -->
             <div class="mb-3">
                 <label for="title" Class="form-label has-validation">Enter Title</label>
                 <input type="text" name="title" required placeholder="Enter Title" class="form-control has-validation"> 
+                <div class="valid-feedback">
+                    Title looks good
+                </div>
+                <div class="invalid-feedback">
+                    Title Missing
+                </div>
             </div>
+            <!-- Description -->
             <div class="mb-3">
                 <label for="description" Class="form-label">Enter Description</label>
                 <textarea type="text" name="description" placeholder="Enter Description" class="form-control has-validation" required ></textarea>
+                <div class="valid-feedback">
+                    Description looks good
+                </div>
+                <div class="invalid-feedback">
+                    Description can be improved
+                </div>
             </div>
+            <!-- Image -->
             <div class="mb-3">
                 <label for="image" Class="form-label">Image URL</label>
                 <input type="text" name="image" placeholder="Image URL" class="form-control">
             </div>
+            <!-- Location -->
             <div class="mb-3">
                 <label for="location" Class="form-label">Location:</label>
                 <input type="text" name="location" placeholder="Location" required class="form-control has-validation">
+                <div class="valid-feedback">
+                    Location Verified
+                </div>
+                <div class="invalid-feedback">
+                    Location Missing
+                </div>
             </div>
+            <!-- Price & Countory -->
             <div class="row">
+                <!-- Price -->
                 <div class="mb-3 col-md-8">
                     <label for="price" Class="form-label">Enter Price</label>
                     <input type="number" name="price" placeholder="Price" class="form-control has-validation" required>
+                    <div class="valid-feedback">
+                        Price is accurate
+                    </div>
+                    <div class="invalid-feedback">
+                        Price Missing
+                    </div>  
                 </div>
+                <!-- Countory -->
                 <div class="mb-3 col-md-4">
                     <label for="country" Class="form-label">Country</label>
                     <input type="text" name="country" placeholder="country" class="form-control has-validation" required>
+                    <div class="valid-feedback">
+                        Valid Country
+                    </div>
+                    <div class="invalid-feedback">
+                        Countory Missing
+                    </div>
                 </div>
             </div>
+            <!-- Submit Button -->
             <br>
-            <button class="btn btn-danger" style="border: none;">Create Listing</button>
+            <button class="btn btn-danger" style="border: none;">
+                Create Listing
+            </button>
             <br>
         </form>
     </div>
