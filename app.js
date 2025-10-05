@@ -95,9 +95,7 @@ app.use((req, res, next) => {
 // Error handler
 app.use((err, req, res, next) => {
     let { statusCode, message } = err;
-    if (!statusCode) statusCode = 500;
-    if (!message) message = 'Something went wrong';
-    res.status(statusCode).send(message);
+    res.render('error.ejs', {err})
 });
 
 // Server start
