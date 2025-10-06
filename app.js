@@ -10,6 +10,7 @@ const ejsMate = require('ejs-mate');
 const wrapAsync = require('./utils/wrapAsync')
 const expressErrors = require('./utils/expressError');
 const { error } = require('console');
+const listingSchema = require('./schema')
 
 
 
@@ -36,6 +37,17 @@ app.get('/', (req, res) => {
     res.redirect('/listings');
 });
 
+const validateListing = (req, res, next) => {
+    let {error} = listingSchema.validate(req.body.listing);
+    console.log(result);
+    if(error){
+        let errMsg = error.details.map((el) => el.message).join(',');
+        throw new expressErrors(400, errMsg);
+    } else {
+        next();
+    }
+}
+
 // Index route – show all listings
 app.get('/listings', async (req, res) => {
     const allListings = await listing.find({});
@@ -48,10 +60,7 @@ app.get('/listings/new', (req, res) => {
 });
 
 // Create route – handle new listing submission
-app.post('/listings', wrapAsync( async (req, res, next) => {
-    if(!req.body){
-        throw new expressErrors(400, "Send valid data for listing.")
-    }
+app.post('/listings',validateListing , wrapAsync( async (req, res, next) => {
     const newListing = new listing(req.body);
     await newListing.save();
     res.redirect('/listings');
@@ -65,11 +74,13 @@ app.get('/listings/:id/edit', async (req, res) => {
 });
 
 // Update route – handle PUT request
-app.put('/listings/:id', async (req, res) => {
+app.put('/listings/:id',
+    validateListing,
+    wrapAsync(async (req, res) => {
     const { id } = req.params;
     const updatedListing = await listing.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
     res.redirect(`/listings/${updatedListing._id}`);
-});
+}));
 
 // Delete route – handle DELETE request
 app.delete('/listings/:id', async (req, res) => {
