@@ -10,7 +10,9 @@ const ejsMate = require('ejs-mate');
 const wrapAsync = require('./utils/wrapAsync')
 const expressErrors = require('./utils/expressError');
 const { error } = require('console');
-const listingSchema = require('./schema')
+const {listingSchema, reviewSchema} = require('./schema')
+const Review = require('./models/review');
+
 
 
 
@@ -39,7 +41,18 @@ app.get('/', (req, res) => {
 
 const validateListing = (req, res, next) => {
     let {error} = listingSchema.validate(req.body.listing);
-    console.log(result);
+    console.log(res);
+    if(error){
+        let errMsg = error.details.map((el) => el.message).join(',');
+        throw new expressErrors(400, errMsg);
+    } else {
+        next();
+    }
+}
+
+const validateReview = (req, res, next) => {
+    let {error} = reviewSchema.validate(req.body.review);
+    console.log(res);
     if(error){
         let errMsg = error.details.map((el) => el.message).join(',');
         throw new expressErrors(400, errMsg);
@@ -90,13 +103,34 @@ app.delete('/listings/:id', async (req, res) => {
     res.redirect('/listings');
 });
 
+// Review Deleting
+app.delete('/listings/:id/reviews/:reviewId', wrapAsync( async (req, res) => {
+    const { id, reviewId } = req.params;
+    await listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/listings/${id}`);
+}));
+
 
 // Show route – show a single listing
 app.get('/listings/:id', async (req, res) => {
     const { id } = req.params;
-    const foundListing = await listing.findById(id);
+    const foundListing = await listing.findById(id).populate("reviews"); 
     res.render('listings/show.ejs', { foundListing });
 });
+
+// Review routes
+app.post('/listings/:id/reviews',validateReview , wrapAsync(async (req, res) => {
+    let { id } = req.params;
+    let foundListing = await listing.findById(id);
+    let newReview = new Review(req.body.review);
+    foundListing.reviews.push(newReview);
+    console.log(newReview);
+    await newReview.save();
+    console.log(foundListing);
+    await foundListing.save();
+    res.redirect(`/listings/${foundListing._id}`);
+}));
 
 // Catch-all for unknown routes
 app.use((req, res, next) => {

@@ -1,77 +1,61 @@
 <% layout("layouts/boilerPlate") %>
-<div class="row">
-    <div class="col-8 offset-2">
-        <h1>Add new Listing</h1>
+
+<div class="add-container container py-5">
+    <div class="col-lg-8 col-md-10 mx-auto p-4 add-card shadow-lg rounded-4">
+        <h2 class="mb-4 text-center fw-bold">Add New Listing</h2>
         <form method="POST" action="/listings" novalidate class="needs-validation">
+            
             <!-- Title -->
             <div class="mb-3">
-                <label for="title" Class="form-label has-validation">Enter Title</label>
-                <input type="text" name="title" required placeholder="Enter Title" class="form-control has-validation"> 
-                <div class="valid-feedback">
-                    Title looks good
-                </div>
-                <div class="invalid-feedback">
-                    Title Missing
-                </div>
+                <label for="title" class="form-label fw-semibold">Title</label>
+                <input type="text" name="title" required placeholder="Enter Title" class="form-control">
+                <div class="valid-feedback">Title looks good</div>
+                <div class="invalid-feedback">Title Missing</div>
             </div>
+
             <!-- Description -->
             <div class="mb-3">
-                <label for="description" Class="form-label">Enter Description</label>
-                <textarea type="text" name="description" placeholder="Enter Description" class="form-control has-validation" required ></textarea>
-                <div class="valid-feedback">
-                    Description looks good
-                </div>
-                <div class="invalid-feedback">
-                    Description can be improved
-                </div>
+                <label for="description" class="form-label fw-semibold">Description</label>
+                <textarea name="description" placeholder="Enter Description" class="form-control" rows="3" required></textarea>
+                <div class="valid-feedback">Description looks good</div>
+                <div class="invalid-feedback">Description Missing</div>
             </div>
+
             <!-- Image -->
             <div class="mb-3">
-                <label for="image" Class="form-label">Image URL</label>
-                <input type="text" name="image" placeholder="Image URL" class="form-control">
+                <label for="image" class="form-label fw-semibold">Image URL</label>
+                <input type="text" name="image" placeholder="Paste image URL" class="form-control">
             </div>
+
             <!-- Location -->
             <div class="mb-3">
-                <label for="location" Class="form-label">Location:</label>
-                <input type="text" name="location" placeholder="Location" required class="form-control has-validation">
-                <div class="valid-feedback">
-                    Location Verified
-                </div>
-                <div class="invalid-feedback">
-                    Location Missing
-                </div>
+                <label for="location" class="form-label fw-semibold">Location</label>
+                <input type="text" name="location" required placeholder="Enter Location" class="form-control">
+                <div class="valid-feedback">Location Verified</div>
+                <div class="invalid-feedback">Location Missing</div>
             </div>
-            <!-- Price & Countory -->
+
+            <!-- Price & Country -->
             <div class="row">
-                <!-- Price -->
-                <div class="mb-3 col-md-8">
-                    <label for="price" Class="form-label">Enter Price</label>
-                    <input type="number" name="price" placeholder="Price" class="form-control has-validation" required>
-                    <div class="valid-feedback">
-                        Price is accurate
-                    </div>
-                    <div class="invalid-feedback">
-                        Price Missing
-                    </div>  
+                <div class="col-md-8 mb-3">
+                    <label for="price" class="form-label fw-semibold">Price</label>
+                    <input type="number" name="price" required placeholder="Enter Price" class="form-control">
+                    <div class="valid-feedback">Valid Price</div>
+                    <div class="invalid-feedback">Price Missing</div>
                 </div>
-                <!-- Countory -->
-                <div class="mb-3 col-md-4">
-                    <label for="country" Class="form-label">Country</label>
-                    <input type="text" name="country" placeholder="country" class="form-control has-validation" required>
-                    <div class="valid-feedback">
-                        Valid Country
-                    </div>
-                    <div class="invalid-feedback">
-                        Countory Missing
-                    </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="country" class="form-label fw-semibold">Country</label>
+                    <input type="text" name="country" required placeholder="Enter Country" class="form-control">
+                    <div class="valid-feedback">Valid Country</div>
+                    <div class="invalid-feedback">Country Missing</div>
                 </div>
             </div>
-            <!-- Submit Button -->
-            <br>
-            <button class="btn btn-danger" style="border: none;">
-                Create Listing
-            </button>
-            <br>
+
+            <!-- Submit -->
+            <div class="text-center mt-4">
+                <button class="btn add-btn px-4 py-2">Create Listing</button>
+            </div>
         </form>
     </div>
 </div>
