@@ -3,12 +3,12 @@
 <div class="edit-container container py-5">
     <div class="col-lg-8 col-md-10 mx-auto p-4 edit-card shadow-lg rounded-4">
         <h2 class="mb-4 text-center fw-bold">Edit Listing</h2>
-        <form method="POST" action="/listings/<%= foundListing._id %>?_method=PUT" novalidate class="needs-validation">
+    <form method="POST" action="/listings/<%= foundListing._id %>?_method=PUT" novalidate class="needs-validation">
             
             <!-- Title -->
             <div class="mb-3">
                 <label for="title" class="form-label fw-semibold">Title</label>
-                <input type="text" name="title" value="<%= foundListing.title %>" placeholder="Enter Title" class="form-control" required> 
+                <input type="text" name="listing[title]" value="<%= foundListing.title %>" placeholder="Enter Title" class="form-control" required> 
                 <div class="valid-feedback">Title looks good</div>
                 <div class="invalid-feedback">Title Missing</div>
             </div>
@@ -16,7 +16,7 @@
             <!-- Description -->
             <div class="mb-3">
                 <label for="description" class="form-label fw-semibold">Description</label>
-                <textarea name="description" placeholder="Enter Description" class="form-control" required rows="3"><%= foundListing.description %></textarea>
+                <textarea name="listing[description]" placeholder="Enter Description" class="form-control" required rows="3"><%= foundListing.description %></textarea>
                 <div class="valid-feedback">Description looks good</div>
                 <div class="invalid-feedback">Description Missing</div>
             </div>
@@ -24,13 +24,13 @@
             <!-- Image -->
             <div class="mb-3">
                 <label for="image" class="form-label fw-semibold">Image URL</label>
-                <input type="text" name="image" value="<%= foundListing.image %>" placeholder="Paste image URL" class="form-control">
+                <input type="text" name="listing[image]" value="<%= foundListing.image %>" placeholder="Paste image URL" class="form-control">
             </div>
 
             <!-- Location -->
             <div class="mb-3">
                 <label for="location" class="form-label fw-semibold">Location</label>
-                <input type="text" name="location" value="<%= foundListing.location %>" placeholder="Enter Location" required class="form-control">
+                <input type="text" name="listing[location]" value="<%= foundListing.location %>" placeholder="Enter Location" required class="form-control">
                 <div class="valid-feedback">Location Verified</div>
                 <div class="invalid-feedback">Location Missing</div>
             </div>
@@ -39,14 +39,14 @@
             <div class="row">
                 <div class="col-md-8 mb-3">
                     <label for="country" class="form-label fw-semibold">Country</label>
-                    <input type="text" name="country" value="<%= foundListing.country %>" placeholder="Enter Country" required class="form-control">
+                    <input type="text" name="listing[country]" value="<%= foundListing.country %>" placeholder="Enter Country" required class="form-control">
                     <div class="valid-feedback">Valid Country</div>
                     <div class="invalid-feedback">Country Missing</div>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <label for="price" class="form-label fw-semibold">Price</label>
-                    <input type="number" name="price" value="<%= foundListing.price %>" placeholder="Enter Price" required class="form-control">
+                    <input type="number" name="listing[price]" value="<%= foundListing.price %>" placeholder="Enter Price" required class="form-control">
                     <div class="valid-feedback">Valid Price</div>
                     <div class="invalid-feedback">Price Missing</div>
                 </div>

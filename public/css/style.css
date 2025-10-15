@@ -7,6 +7,12 @@ body {
     font-family: "Plus Jakarta Sans", sans-serif;
 }
 
+/* Ensure main content grows to push footer to the bottom consistently */
+.main-content {
+  flex: 1 0 auto;
+  padding-bottom: 1rem; /* small breathing room above footer */
+}
+
 a {
     color: #6247AA;
     text-decoration: none;
@@ -285,4 +291,17 @@ a:hover {
 
 .review-card p {
     margin: 0.4rem 0;
+}
+
+/* Show page listing hero image: cap height and cover so it doesn't overflow viewport */
+.listing-hero {
+  width: 100%;
+  height: 60vh; /* cap at 60% of viewport height for large screens */
+  object-fit: cover;
+  display: block;
+}
+@media (max-width: 768px) {
+  .listing-hero {
+    height: 40vh; /* smaller cap for mobile */
+  }
 }

@@ -7,7 +7,7 @@
       <!-- Listing Card -->
       <div class="card shadow-lg border-0 rounded-4">
         <img src="<%= foundListing.image %>" 
-             class="card-img-top img-fluid rounded-top" 
+             class="card-img-top img-fluid rounded-top listing-hero" 
              alt="Image of <%= foundListing.title %>">
 
         <div class="card-body">
@@ -66,15 +66,15 @@
         <p class="text-muted">No reviews yet.</p>
     <% } else { %>
         <div class="reviews-grid">
-        <% foundListing.reviews.forEach(review => { %>
-            <div class="review-card">
-            <p><strong>Rating:</strong> <%= '⭐'.repeat(review.rating) %></p>
-            <p><strong>Comment:</strong> <%= review.comment %></p>
-            </div>
-            <form action="/listings/<%= foundListing._id %>/reviews/<%= foundListing.reviews._id %>">
-                <button class="btn">🗑️</button>
-            </form>
-        <% }) %>
+          <% foundListing.reviews.forEach(review => { %>
+              <div class="review-card">
+                <p><strong>Rating:</strong> <%= '⭐'.repeat(review.rating) %></p>
+                <p><strong>Comment:</strong> <%= review.comment %></p>
+        <form action="/listings/<%= foundListing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" style="display:inline;">
+          <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this Review?');">🗑️</button>
+        </form>
+              </div>
+          <% }) %>
         </div>
     <% } %>
 </div>
