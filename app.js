@@ -9,6 +9,8 @@ const ejsMate = require('ejs-mate');
 const expressErrors = require('./utils/expressError');
 const listings = require('./routes/listing');
 const reviews = require('./routes/review');
+const session = require('express-session');
+const flash = require('connect-flash');
 
 
 
@@ -29,6 +31,26 @@ app.engine('ejs', ejsMate);
 app.use((req, res, next) => {
     res.locals.currentPath = req.path;
     next();
+});
+
+// Session configuration
+const sessionOption = {
+    secret: "My Super secret code",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 1 week
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+};
+app.use(session(sessionOption));
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  next();
 });
 
 // Redirect root URL to the listings index (All Listings)
