@@ -7,6 +7,11 @@ const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const expressErrors = require('./utils/expressError');
+const passport = require('passport');
+const lS = require('passport-local');
+const User = require('./models/user');
+
+
 const listings = require('./routes/listing');
 const reviews = require('./routes/review');
 const session = require('express-session');
@@ -44,8 +49,16 @@ const sessionOption = {
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 };
+
 app.use(session(sessionOption));
 app.use(flash());
+
+// Passport configuration
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new lS(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
   res.locals.success = req.flash('success');
