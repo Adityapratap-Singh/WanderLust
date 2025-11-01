@@ -12,8 +12,9 @@ const lS = require('passport-local');
 const User = require('./models/user');
 
 
-const listings = require('./routes/listing');
-const reviews = require('./routes/review');
+const listingsR = require('./routes/listing');
+const reviewsR = require('./routes/review');
+const usersR = require('./routes/user');
 const session = require('express-session');
 const flash = require('connect-flash');
 
@@ -35,8 +36,20 @@ app.engine('ejs', ejsMate);
 // expose the current request path to all templates so includes (like navbar) can mark active links
 app.use((req, res, next) => {
     res.locals.currentPath = req.path;
+    res.locals.user = req.user;
     next();
 });
+
+
+// app.get('/fakeUser', async (req, res) => {
+//     try {
+//         const fakeUser = new User({ email: 'aps@gmail.com', username: 'aps' });
+//         const registeredUser = await User.register(fakeUser, 'chicken');
+//         res.send(registeredUser);
+//     } catch (err) {
+//         res.send(err);
+//     }
+// });
 
 // Session configuration
 const sessionOption = {
@@ -73,15 +86,19 @@ app.get('/', (req, res) => {
 
 // Connect to MongoDB (read from MONGO_URI or fallback to local)
 const dbUrl = process.env.MONGO_URI || 'mongodb://localhost:27017/wonderlust';
-mongoose.connect(dbUrl)
-    .then(() => console.log('MongoDB connected:', dbUrl))
-    .catch(err => console.error('MongoDB connection error:', err));
+mongoose.connect(dbUrl);
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+    console.log('✅ MongoDB connected:', dbUrl);
+});
 
 
 
 // All Listing and Operation
-app.use('/listings', listings);
-app.use('/listings/:id/reviews', reviews);
+app.use('/listings', listingsR);
+app.use('/listings/:id/reviews', reviewsR);
+app.use('/', usersR);
 
 // Catch-all for unknown routes
 app.use((req, res, next) => {
@@ -90,9 +107,11 @@ app.use((req, res, next) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-    let { statusCode, message } = err;
-    res.render('error.ejs', {err})
+    const { statusCode = 500 } = err;
+    if (!err.message) err.message = 'Something went wrong!';
+    res.status(statusCode).render('error', { err });
 });
+
 
 // Server start
 const PORT = process.env.PORT || 8080;

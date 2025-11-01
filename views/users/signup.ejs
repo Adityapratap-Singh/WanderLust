@@ -1,0 +1,55 @@
+<% layout("layouts/boilerPlate") %>
+
+<div class="add-container container py-5">
+    <div class="col-lg-6 col-md-10 mx-auto p-4 add-card shadow-lg rounded-4">
+        <form action="/signUp" method="POST" class="needs-validation" novalidate>
+            <h1 class="offset-3">How we know you</h1>
+            <!-- username -->
+            <div class="mb-3">
+                <label for="username" class="form-label fw-semibold">Username</label>
+                <input 
+                    type="text" 
+                    name="username" 
+                    required 
+                    placeholder="Enter Username" 
+                    class="form-control" 
+                    id="username"
+                >
+                <div class="valid-feedback">Username looks good</div>
+                <div class="invalid-feedback">Username Missing</div>
+            </div>
+            <!-- email -->
+            <div class="mb-3">
+                <label for="email" class="form-label fw-semibold">Email</label>
+                <input 
+                    type="email" 
+                    name="email" 
+                    required 
+                    placeholder="Enter Email" 
+                    class="form-control" 
+                    id="email"
+                >
+                <div class="valid-feedback">Email looks good</div>
+                <div class="invalid-feedback">Email Missing</div>
+            </div>
+            <!-- password -->
+            <div class="mb-3">
+                <label for="password" class="form-label fw-semibold">Password</label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    required 
+                    placeholder="Enter Password" 
+                    class="form-control" 
+                    id="password"
+                >
+                <div class="valid-feedback">Password looks good</div>
+                <div class="invalid-feedback">Password Missing</div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mt-3">Sign Up</button>
+        </form>
+        <form action="/login">
+            <button class="btn btn-primary w-20 mt-3">Need to login</button>
+        </form>
+    </div>
+</div>

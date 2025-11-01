@@ -1,9 +1,7 @@
-const mongodb = require('mongoose');
-const Schema = mongodb.Schema;
-const plr = require('passport-local-mongoose');
+const mongoose = require('mongoose');
+const passportLocalMongoose = require('passport-local-mongoose');
 
-
-const UserSchema = new Schema({
+const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
@@ -14,5 +12,8 @@ const UserSchema = new Schema({
         default: false
     }
 });
-UserSchema.plugin(plr);
-module.exports = mongodb.model('User', UserSchema);
+
+// This adds username, hash, salt fields + helper methods for auth
+userSchema.plugin(passportLocalMongoose);
+
+module.exports = mongoose.model('User', userSchema);
