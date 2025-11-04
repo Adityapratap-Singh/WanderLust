@@ -5,7 +5,24 @@ const Listing = require('../models/listing');
 const wrapAsync = require('../utils/wrapAsync');
 const ExpressError = require('../utils/expressError');
 const { listingSchema } = require('../schema');
-const { isLoggedIn } = require('../middleware'); // ✅ clean import
+const { isLoggedIn } = require('../middleware');
+
+// ----------------------------
+// Authorization Middleware
+// ----------------------------
+const isOwner = async (req, res, next) => {
+    const { id } = req.params;
+    const listing = await Listing.findById(id);
+    if (!listing) {
+        req.flash('error', 'Listing not found');
+        return res.redirect('/listings');
+    }
+    if (!listing.owner.equals(req.user._id)) {
+        req.flash('error', 'You don\'t have permission to do that');
+        return res.redirect(`/listings/${id}`);
+    }
+    next();
+};
 
 // ----------------------------
 // Validate Listing Middleware
@@ -40,6 +57,8 @@ router.get('/new', isLoggedIn, (req, res) => {
 // ----------------------------
 router.post('/', isLoggedIn, validateListing, wrapAsync(async (req, res) => {
     const newListing = new Listing(req.body.listing);
+    // Set the owner to the currently logged in user
+    newListing.owner = req.user._id;
     await newListing.save();
 
     req.flash('success', 'Successfully created a new listing!');
@@ -49,20 +68,16 @@ router.post('/', isLoggedIn, validateListing, wrapAsync(async (req, res) => {
 // ----------------------------
 // Edit Route – Show form to edit listing
 // ----------------------------
-router.get('/:id/edit', isLoggedIn, wrapAsync(async (req, res) => {
+router.get('/:id/edit', isLoggedIn, isOwner, wrapAsync(async (req, res) => {
     const { id } = req.params;
     const foundListing = await Listing.findById(id);
-    if (!foundListing) {
-        req.flash('error', 'Listing not found');
-        return res.redirect('/listings');
-    }
     res.render('listings/edit', { foundListing });
 }));
 
 // ----------------------------
 // Update Route – Apply changes to listing
 // ----------------------------
-router.put('/:id', isLoggedIn, validateListing, wrapAsync(async (req, res) => {
+router.put('/:id', isLoggedIn, isOwner, validateListing, wrapAsync(async (req, res) => {
     const { id } = req.params;
     const updatedListing = await Listing.findByIdAndUpdate(
         id,
@@ -77,7 +92,7 @@ router.put('/:id', isLoggedIn, validateListing, wrapAsync(async (req, res) => {
 // ----------------------------
 // Delete Route – Remove listing
 // ----------------------------
-router.delete('/:id', isLoggedIn, wrapAsync(async (req, res) => {
+router.delete('/:id', isLoggedIn, isOwner, wrapAsync(async (req, res) => {
     const { id } = req.params;
     await Listing.findByIdAndDelete(id);
     req.flash('success', 'Listing deleted successfully!');
@@ -89,7 +104,9 @@ router.delete('/:id', isLoggedIn, wrapAsync(async (req, res) => {
 // ----------------------------
 router.get('/:id', wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const foundListing = await Listing.findById(id).populate('reviews');
+    const foundListing = await Listing.findById(id)
+        .populate('reviews')
+        .populate('owner');
     if (!foundListing) {
         req.flash('error', 'Listing not found');
         return res.redirect('/listings');
