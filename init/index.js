@@ -22,6 +22,7 @@ const initDB = async () => {
         console.log(`Skipping existing listing: ${item.title}`);
         continue;
       }
+      initData.data = initData.data.map(item => new Listing({item, owner:"64a7f0c2b4d1c2a5f0e4d123"}));
       await Listing.create(item);
       console.log(`Inserted listing: ${item.title}`);
     }
