@@ -33,12 +33,6 @@ app.use(methodOverride('_method'));   // enables PUT & DELETE via ?_method=
 // ejs-locals for all ejs templates:
 app.engine('ejs', ejsMate);
 
-// expose the current request path to all templates so includes (like navbar) can mark active links
-app.use((req, res, next) => {
-    res.locals.currentPath = req.path;
-    res.locals.user = req.user;
-    next();
-});
 
 
 // app.get('/fakeUser', async (req, res) => {
@@ -55,7 +49,7 @@ app.use((req, res, next) => {
 const sessionOption = {
     secret: "My Super secret code",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         httpOnly: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 1 week
@@ -77,6 +71,15 @@ app.use((req, res, next) => {
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
   next();
+});
+
+// expose the current request path and authenticated user to all templates
+// This must run after session & passport middleware so `req.user` is populated
+app.use((req, res, next) => {
+        res.locals.currentPath = req.path;
+        res.locals.user = req.user;
+        res.locals.currentUser = req.user;
+        next();
 });
 
 // Redirect root URL to the listings index (All Listings)

@@ -31,6 +31,28 @@ a:hover {
   font-family: "Plus Jakarta Sans", sans-serif;
 }
 
+/* Logout button styling */
+.navbar .btn-link {
+  color: #f8f9fa !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  text-decoration: none;
+  background: none;
+  border: none;
+  transition: color 0.3s ease;
+}
+
+.navbar .btn-link:hover {
+  color: #FFD93D !important;
+  text-decoration: none;
+}
+
+.navbar form {
+  margin: 0;
+  padding: 0;
+}
+
 /* Brand */
 .navbar-brand {
   color: #fff !important;

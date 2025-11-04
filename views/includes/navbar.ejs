@@ -11,10 +11,27 @@
     </button>
 
     <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
+      <div class="navbar-nav ms-3">
         <a class="nav-link <%= currentPath === '/' ? 'active' : '' %>" href="/">Home</a>
         <a class="nav-link <%= currentPath.startsWith('/listings') && currentPath !== '/listings/new' ? 'active' : '' %>" href="/listings">All Listings</a>
-        <a class="nav-link <%= currentPath === '/listings/new' ? 'active' : '' %>" href="/listings/new">Add New Listing</a>
+        <% if (currentUser) { %>
+          <a class="nav-link <%= currentPath === '/listings/new' ? 'active' : '' %>" href="/listings/new">Add New Listing</a>
+        <% } else { %>
+          <!-- If not logged in, Add New Listing sends user to login (login required) -->
+          <a class="nav-link text-muted" href="/login" title="Login to add a new listing">Add New Listing</a>
+        <% } %>
+      </div>
+      <div class="navbar-nav ms-auto">
+        <% if(currentUser) { %>
+          <!-- When logged in, only show Logout (no Login/Signup) -->
+          <form action="/logout" method="POST" class="d-inline">
+            <button class="nav-link btn btn-link" type="submit">Logout</button>
+          </form>
+        <% } else { %>
+          <!-- NOTE: signup route is defined as /signUp in routes, link to that path -->
+          <a class="nav-link <%= currentPath === '/signUp' ? 'active' : '' %>" href="/signUp">Sign up</a>
+          <a class="nav-link <%= currentPath === '/login' ? 'active' : '' %>" href="/login">Login</a>
+        <% } %>
       </div>
     </div>
   </div>
