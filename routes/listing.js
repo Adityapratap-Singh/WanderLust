@@ -57,6 +57,7 @@ router.get('/new', isLoggedIn, (req, res) => {
 // ----------------------------
 router.post('/', isLoggedIn, validateListing, wrapAsync(async (req, res) => {
     const newListing = new Listing(req.body.listing);
+    console.log(req.user);
     // Set the owner to the currently logged in user
     newListing.owner = req.user._id;
     await newListing.save();
@@ -105,7 +106,12 @@ router.delete('/:id', isLoggedIn, isOwner, wrapAsync(async (req, res) => {
 router.get('/:id', wrapAsync(async (req, res) => {
     const { id } = req.params;
     const foundListing = await Listing.findById(id)
-        .populate('reviews')
+        .populate({
+            path: 'reviews',
+            populate: {
+                path: 'author'
+            }
+        })
         .populate('owner');
     if (!foundListing) {
         req.flash('error', 'Listing not found');

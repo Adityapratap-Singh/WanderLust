@@ -44,26 +44,28 @@
       </div>
 
       <!-- Review Section -->
-      <div class="mt-5">
-        <h4>Leave a Review</h4>
-        <form action="/listings/<%= foundListing._id %>/reviews" 
-              method="POST" 
-              class="needs-validation mt-3" novalidate>
+      <% if (currentUser) { %>
+        <div class="mt-5">
+          <h4>Leave a Review</h4>
+          <form action="/listings/<%= foundListing._id %>/reviews" 
+                method="POST" 
+                class="needs-validation mt-3" novalidate>
 
-          <div class="mb-3">
-            <label for="rating" class="form-label">Rating:</label>
-            <input type="range" class="form-range" min="1" max="5" id="rating" name="review[rating]" required>
-          </div>
+            <div class="mb-3">
+              <label for="rating" class="form-label">Rating:</label>
+              <input type="range" class="form-range" min="1" max="5" id="rating" name="review[rating]" required>
+            </div>
 
-          <div class="mb-3">
-            <label for="comment" class="form-label">Comment:</label>
-            <textarea id="comment" name="review[comment]" class="form-control" rows="4" required></textarea>
-            <div class="invalid-feedback">Please fill in a comment.</div>
-          </div>
+            <div class="mb-3">
+              <label for="comment" class="form-label">Comment:</label>
+              <textarea id="comment" name="review[comment]" class="form-control" rows="4" required></textarea>
+              <div class="invalid-feedback">Please fill in a comment.</div>
+            </div>
 
-          <button type="submit" class="btn btn-success">Submit Review</button>
-        </form>
-      </div>
+            <button type="submit" class="btn btn-success">Submit Review</button>
+          </form>
+        </div>
+      <% } %>
 
 <!-- All Reviews -->
 <div class="reviews-section mt-4">
@@ -74,11 +76,19 @@
         <div class="reviews-grid">
           <% foundListing.reviews.forEach(review => { %>
               <div class="review-card">
+                <p>
+                  <strong>By:</strong> 
+                  <span class="text-muted"><%= review.author ? review.author.username : 'Unknown' %></span>
+                </p>
                 <p><strong>Rating:</strong> <%= '⭐'.repeat(review.rating) %></p>
                 <p><strong>Comment:</strong> <%= review.comment %></p>
-        <form action="/listings/<%= foundListing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" style="display:inline;">
-          <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this Review?');">🗑️</button>
-        </form>
+                <% if (currentUser && review.author && review.author._id.equals(currentUser._id)) { %>
+                  <form action="/listings/<%= foundListing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this Review?');">
+                      <i class="fa-regular fa-trash-can"></i> Delete
+                    </button>
+                  </form>
+                <% } %>
               </div>
           <% }) %>
         </div>
