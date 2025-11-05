@@ -5,7 +5,8 @@ const reviewController = require('../controllers/reviews');
 const wrapAsync = require('../utils/wrapAsync');
 
 // Create and Delete routes
-router.post('/', isLoggedIn, validateReview, wrapAsync(reviewController.createReview));
-router.delete('/:reviewId', isLoggedIn, isReviewAuthor, wrapAsync(reviewController.deleteReview));
+router.route('/').post(isLoggedIn, validateReview, wrapAsync(reviewController.createReview));
+
+router.route('/:reviewId').delete(isLoggedIn, isReviewAuthor, wrapAsync(reviewController.deleteReview));
 
 module.exports = router;
