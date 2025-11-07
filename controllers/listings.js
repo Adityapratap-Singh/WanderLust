@@ -14,8 +14,8 @@ module.exports.renderNewForm = (req, res) => {
 // Create - Create a new listing
 module.exports.createListing = async (req, res) => {
     const newListing = new Listing(req.body.listing);
-    // Set the owner to the currently logged in user
     newListing.owner = req.user._id;
+    newListing.image = req.file.path;
     await newListing.save();
     req.flash('success', 'Successfully created a new listing!');
     res.redirect(`/listings/${newListing._id}`);
@@ -36,7 +36,13 @@ module.exports.showListing = async (req, res) => {
         req.flash('error', 'Listing not found');
         return res.redirect('/listings');
     }
-    res.render('listings/show', { foundListing });
+
+    let averageRating = 0;
+    if (foundListing.reviews.length > 0) {
+        averageRating = foundListing.reviews.reduce((acc, review) => acc + review.rating, 0) / foundListing.reviews.length;
+    }
+
+    res.render('listings/show', { foundListing, averageRating });
 };
 
 // Edit - Show form to edit listing
@@ -54,6 +60,10 @@ module.exports.updateListing = async (req, res) => {
         req.body.listing,
         { new: true, runValidators: true }
     );
+    if (req.file) {
+        updatedListing.image = req.file.path;
+        await updatedListing.save();
+    }
     req.flash('success', 'Listing updated successfully!');
     res.redirect(`/listings/${updatedListing._id}`);
 };

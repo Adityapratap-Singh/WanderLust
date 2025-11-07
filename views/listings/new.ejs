@@ -3,7 +3,7 @@
 <div class="add-container container py-5">
     <div class="col-lg-8 col-md-10 mx-auto p-4 add-card shadow-lg rounded-4">
         <h2 class="mb-4 text-center fw-bold">Add New Listing</h2>
-    <form method="POST" action="/listings" novalidate class="needs-validation">
+    <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
             
             <!-- Title -->
             <div class="mb-3">
@@ -23,8 +23,8 @@
 
             <!-- Image -->
             <div class="mb-3">
-                <label for="image" class="form-label fw-semibold">Image URL</label>
-                <input type="text" name="listing[image]" placeholder="Paste image URL" class="form-control">
+                <label for="image" class="form-label fw-semibold">Image</label>
+                <input type="file" name="listing[image]" class="form-control">
             </div>
 
             <!-- Location -->

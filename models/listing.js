@@ -12,8 +12,6 @@ const listingSchema = new mongoose.Schema({
     },
     image:{
         type: String,
-        default: 'https://i.pinimg.com/1200x/c9/60/e5/c960e575cf8225227dcf5b826561bc46',
-        set: v => v === '' ? 'https://www.pinterest.com/ideas/unavailable-profile-pic/949980617996/' : v
     },
     price:{
         type: Number,
