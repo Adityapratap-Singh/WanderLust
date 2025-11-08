@@ -1,4 +1,5 @@
 const Listing = require('../models/listing');
+const { cloudinary } = require('../cloudinary');
 
 // Index - Show all listings
 module.exports.index = async (req, res) => {
@@ -14,8 +15,13 @@ module.exports.renderNewForm = (req, res) => {
 // Create - Create a new listing
 module.exports.createListing = async (req, res) => {
     const newListing = new Listing(req.body.listing);
+    if (req.file) {
+        newListing.image = {
+            url: req.file.path,
+            filename: req.file.filename
+        };
+    }
     newListing.owner = req.user._id;
-    newListing.image = req.file.path;
     await newListing.save();
     req.flash('success', 'Successfully created a new listing!');
     res.redirect(`/listings/${newListing._id}`);
@@ -49,7 +55,15 @@ module.exports.showListing = async (req, res) => {
 module.exports.renderEditForm = async (req, res) => {
     const { id } = req.params;
     const foundListing = await Listing.findById(id);
-    res.render('listings/edit', { foundListing });
+    if (!foundListing) {
+        req.flash('error', 'Listing not found');
+        return res.redirect('/listings');
+    }
+    let originalUrl = '';
+    if (foundListing.image) {
+        originalUrl = foundListing.image.url.replace(/\\/g, '/');
+    }
+    res.render('listings/edit', { foundListing, originalUrl });
 };
 
 // Update - Update a listing
@@ -61,7 +75,13 @@ module.exports.updateListing = async (req, res) => {
         { new: true, runValidators: true }
     );
     if (req.file) {
-        updatedListing.image = req.file.path;
+        if (updatedListing.image && updatedListing.image.filename) {
+            await cloudinary.uploader.destroy(updatedListing.image.filename);
+        }
+        updatedListing.image = {
+            url: req.file.path,
+            filename: req.file.filename
+        };
         await updatedListing.save();
     }
     req.flash('success', 'Listing updated successfully!');
@@ -71,6 +91,10 @@ module.exports.updateListing = async (req, res) => {
 // Delete - Delete a listing
 module.exports.deleteListing = async (req, res) => {
     const { id } = req.params;
+    const listing = await Listing.findById(id);
+    if (listing.image && listing.image.filename) {
+        await cloudinary.uploader.destroy(listing.image.filename);
+    }
     await Listing.findByIdAndDelete(id);
     req.flash('success', 'Listing deleted successfully!');
     res.redirect('/listings');

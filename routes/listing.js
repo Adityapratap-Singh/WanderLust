@@ -4,7 +4,8 @@ const { isLoggedIn, isOwner, validateListing } = require('../middleware');
 const listingController = require('../controllers/listings');
 const wrapAsync = require('../utils/wrapAsync');
 const multer = require('multer');
-const upload = multer({ dest: 'public/uploads/' });
+const { storage } = require('../cloudinary');
+const upload = multer({ storage });
 
 // Index and Create
 router.route('/')

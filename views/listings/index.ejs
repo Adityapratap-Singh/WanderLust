@@ -7,10 +7,10 @@
         <div class="col">
           <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
             <div class="card border-0 shadow-sm rounded-4 h-100 listing-card">
-              <img 
-                src="<%= listing.image %>" 
-                class="card-img-top rounded-top-4" 
-                alt="Image of <%= listing.title %>" 
+              <img
+                src="<%= listing.image && listing.image.url ? listing.image.url : listing.image %>"
+                class="card-img-top rounded-top-4"
+                alt="Image of <%= listing.title %>"
                 style="height: 16rem; object-fit: cover;"
               >
 

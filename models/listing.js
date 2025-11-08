@@ -11,7 +11,8 @@ const listingSchema = new mongoose.Schema({
         required: true
     },
     image:{
-        type: String,
+        url: String,
+        filename: String
     },
     price:{
         type: Number,

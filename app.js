@@ -82,6 +82,16 @@ app.use((req, res, next) => {
         next();
 });
 
+app.use('/favicon.ico', (req, res) => res.sendStatus(204));
+
+// Middleware to ignore sourcemap requests
+app.use((req, res, next) => {
+    if (req.path.endsWith('.map')) {
+        return res.sendStatus(204);
+    }
+    next();
+});
+
 // Redirect root URL to the listings index (All Listings)
 app.get('/', (req, res) => {
     res.redirect('/listings');
@@ -110,9 +120,12 @@ app.use((req, res, next) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-    const { statusCode = 500 } = err;
-    if (!err.message) err.message = 'Something went wrong!';
-    res.status(statusCode).render('error', { err });
+    console.log(err);
+    if (!(err instanceof expressErrors)) {
+        err = new expressErrors(500, 'Something went wrong!');
+    }
+    const { statusCode = 500, message = 'Something went wrong!' } = err;
+    res.status(statusCode).render('error', { err: { statusCode, message, stack: err.stack } });
 });
 
 
