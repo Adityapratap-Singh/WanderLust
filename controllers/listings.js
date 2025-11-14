@@ -1,5 +1,8 @@
 const Listing = require('../models/listing');
 const { cloudinary } = require('../cloudinary');
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const mapToken = process.env.MAP_TOKEN;
+const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
 // Index - Show all listings
 module.exports.index = async (req, res) => {
@@ -14,7 +17,14 @@ module.exports.renderNewForm = (req, res) => {
 
 // Create - Create a new listing
 module.exports.createListing = async (req, res) => {
+    const geoData = await geocodingClient.forwardGeocode({
+        query: req.body.listing.location,
+        limit: 1
+    }).send();
+    
     const newListing = new Listing(req.body.listing);
+    newListing.geometry = geoData.body.features[0].geometry;
+    
     if (req.file) {
         newListing.image = {
             url: req.file.path,
@@ -74,6 +84,15 @@ module.exports.updateListing = async (req, res) => {
         req.body.listing,
         { new: true, runValidators: true }
     );
+
+    if(req.body.listing.location){
+        const geoData = await geocodingClient.forwardGeocode({
+            query: req.body.listing.location,
+            limit: 1
+        }).send();
+        updatedListing.geometry = geoData.body.features[0].geometry;
+    }
+
     if (req.file) {
         if (updatedListing.image && updatedListing.image.filename) {
             await cloudinary.uploader.destroy(updatedListing.image.filename);
@@ -82,8 +101,8 @@ module.exports.updateListing = async (req, res) => {
             url: req.file.path,
             filename: req.file.filename
         };
-        await updatedListing.save();
     }
+    await updatedListing.save();
     req.flash('success', 'Listing updated successfully!');
     res.redirect(`/listings/${updatedListing._id}`);
 };
