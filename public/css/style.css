@@ -7,6 +7,73 @@ body {
     font-family: "Plus Jakarta Sans", sans-serif;
 }
 
+/* === Filter Scroll Wrapper === */
+.filters-wrapper {
+  overflow-x: hidden;   /* hide scrollbar area */
+  position: relative;
+}
+
+/* === Filters Row === */
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  white-space: nowrap;
+  padding-bottom: 0.5rem;
+  scroll-behavior: smooth;
+  overflow-x: auto;
+}
+
+/* Hide scrollbar (Chrome + Firefox) */
+.filters::-webkit-scrollbar {
+  display: none;
+}
+.filters {
+  -ms-overflow-style: none; /* IE */
+  scrollbar-width: none;    /* Firefox */
+}
+
+/* === Single Filter Card === */
+.filter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  flex: 0 0 auto; /* required for horizontal scroll */
+}
+
+.filter:hover {
+  background-color: #f8f9fa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter i {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #007bff;
+}
+
+.filter p {
+  margin: 0;
+  font-weight: 500;
+  color: #333;
+}
+
+#filterScroll {
+    overflow-x: scroll;
+    white-space: nowrap;
+    scrollbar-width: none; /* Firefox */
+}
+
+#filterScroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+}
+
+
 /* Ensure main content grows to push footer to the bottom consistently */
 .main-content {
   flex: 1 0 auto;

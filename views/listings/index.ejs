@@ -1,7 +1,110 @@
 <% layout("layouts/boilerPlate") %>
+<style>
+  
+</style>
   <div class="container py-5">
-    <h1 class="text-center mb-5 text-primary fw-bold">All Listings</h1>
+    <!-- <h1 class="text-center mb-5 text-primary fw-bold">All Listings</h1> -->
+    <div class="filters">
+      <div class="filter">
+        <i class="fa-solid fa-mountain"></i>
+        <p>Adventure</p>
+      </div>
 
+      <div class="filter">
+        <i class="fa-solid fa-water"></i>
+        <p>Waterfront</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-tree"></i>
+        <p>Nature</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-city"></i>
+        <p>City</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-umbrella-beach"></i>
+        <p>Beach</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-person-hiking"></i>
+        <p>Trekking</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-bicycle"></i>
+        <p>Bike Tours</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-car"></i>
+        <p>Road Trip</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-utensils"></i>
+        <p>Food</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-camera"></i>
+        <p>Photography</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-music"></i>
+        <p>Music</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-wine-bottle"></i>
+        <p>Nightlife</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-snowflake"></i>
+        <p>Snow</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-sun"></i>
+        <p>Sunny</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-hotel"></i>
+        <p>Hotels</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-campground"></i>
+        <p>Glamping</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-house"></i>
+        <p>Home Stay</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-paw"></i>
+        <p>Pet Friendly</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-plane-departure"></i>
+        <p>Travel</p>
+      </div>
+
+      <div class="filter">
+        <i class="fa-solid fa-star"></i>
+        <p>Top Rated</p>
+      </div>
+    </div>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
       <% for (let listing of allListings) { %>
         <div class="col">

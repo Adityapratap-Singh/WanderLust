@@ -44,6 +44,43 @@ const listingSchema = new mongoose.Schema({
             type: [Number],
             required: true
         }
+    },
+    category: {
+        type: String,
+        enum: [
+            'Apartment',
+            'House',
+            'Condo',
+            'Cabin',
+            'Villa',
+            'Cottage',
+
+            // New categories
+            'Trending',
+            'Stay',
+            'Camp',
+            'Adventure',
+            'Waterfront',
+            'Nature',
+            'City',
+            'Beach',
+            'Trekking',
+            'Bike Tours',
+            'Road Trip',
+            'Food',
+            'Photography',
+            'Music',
+            'Nightlife',
+            'Snow',
+            'Sunny',
+            'Hotels',
+            'Glamping',
+            'Home Stay',
+            'Pet Friendly',
+            'Travel',
+            'Top Rated'
+        ],
+        required: true
     }
 });
 
