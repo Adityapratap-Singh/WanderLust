@@ -16,7 +16,7 @@ module.exports.signup = async (req, res) => {
         // Once registered, automatically log them in for a smoother experience
         req.login(registeredUser, err => {
             if (err) return next(err);
-            req.flash('success', 'Welcome to WanderLust!');
+            req.flash('success', 'Welcome to Ghoomo!');
             res.redirect('/listings');
         });
     } catch (e) {

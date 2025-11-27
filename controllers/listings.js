@@ -1,13 +1,29 @@
 const Listing = require('../models/listing');
 const { cloudinary } = require('../cloudinary');
-const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
-const mapToken = process.env.MAP_TOKEN;
-const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
-// Index - Show all listings
+// Index - Show all listings with pagination
 module.exports.index = async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render('listings/index', { allListings });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    const allListings = await Listing.find({})
+        .populate('reviews')
+        .skip(skip)
+        .limit(limit + 1); // Fetch one extra to check if there are more
+
+    allListings.forEach(listing => {
+        if (listing.reviews.length > 0) {
+            listing.averageRating = listing.reviews.reduce((acc, review) => acc + review.rating, 0) / listing.reviews.length;
+        } else {
+            listing.averageRating = 0;
+        }
+    });
+
+    const totalListings = await Listing.countDocuments();
+    const hasMore = skip + limit < totalListings;
+
+    res.render('listings/index', { allListings, page, hasMore });
 };
 
 // New - Show form to create new listing
@@ -17,22 +33,21 @@ module.exports.renderNewForm = (req, res) => {
 
 // Create - Create a new listing
 module.exports.createListing = async (req, res) => {
-    const geoData = await geocodingClient.forwardGeocode({
-        query: req.body.listing.location,
-        limit: 1
-    }).send();
-    
     const newListing = new Listing(req.body.listing);
-    newListing.geometry = geoData.body.features[0].geometry;
-    
+
     if (req.file) {
+        console.log('Uploaded file:', req.file);
         newListing.image = {
-            url: req.file.path,
-            filename: req.file.filename
+            url: req.file.secure_url,
+            filename: req.file.public_id
         };
+        console.log('Set image:', newListing.image);
+    } else {
+        console.log('No file uploaded');
     }
     newListing.owner = req.user._id;
     await newListing.save();
+    console.log('Saved listing image:', newListing.image);
     req.flash('success', 'Successfully created a new listing!');
     res.redirect(`/listings/${newListing._id}`);
 };
@@ -79,33 +94,21 @@ module.exports.renderEditForm = async (req, res) => {
 // Update - Update a listing
 module.exports.updateListing = async (req, res) => {
     const { id } = req.params;
-    const updatedListing = await Listing.findByIdAndUpdate(
-        id,
-        req.body.listing,
-        { new: true, runValidators: true }
-    );
-
-    if(req.body.listing.location){
-        const geoData = await geocodingClient.forwardGeocode({
-            query: req.body.listing.location,
-            limit: 1
-        }).send();
-        updatedListing.geometry = geoData.body.features[0].geometry;
-    }
+    const updateData = { ...req.body.listing };
 
     if (req.file) {
-        if (updatedListing.image && updatedListing.image.filename) {
-            await cloudinary.uploader.destroy(updatedListing.image.filename);
-        }
-        updatedListing.image = {
-            url: req.file.path,
-            filename: req.file.filename
+        updateData.image = {
+            url: req.file.secure_url,
+            filename: req.file.public_id
         };
     }
-    await updatedListing.save();
+
+    const listing = await Listing.findByIdAndUpdate(id, updateData, { new: true });
+    console.log(listing);
     req.flash('success', 'Listing updated successfully!');
-    res.redirect(`/listings/${updatedListing._id}`);
+    res.redirect(`/listings/${listing._id}`);
 };
+
 
 // Delete - Delete a listing
 module.exports.deleteListing = async (req, res) => {
@@ -117,4 +120,46 @@ module.exports.deleteListing = async (req, res) => {
     await Listing.findByIdAndDelete(id);
     req.flash('success', 'Listing deleted successfully!');
     res.redirect('/listings');
+};
+
+// Filter by category
+module.exports.filterByCategory = async (req, res) => {
+    const { category } = req.params;
+    const allListings = await Listing.find({ category }).populate('reviews');
+    allListings.forEach(listing => {
+        if (listing.reviews.length > 0) {
+            listing.averageRating = listing.reviews.reduce((acc, review) => acc + review.rating, 0) / listing.reviews.length;
+        } else {
+            listing.averageRating = 0;
+        }
+    });
+    res.render('listings/index', { allListings, page: 1, hasMore: false });
+};
+
+// Search
+module.exports.search = async (req, res) => {
+    const { q } = req.query;
+    const allListings = await Listing.find({
+        $or: [
+            { title: { $regex: q, $options: 'i' } },
+            { description: { $regex: q, $options: 'i' } },
+            { location: { $regex: q, $options: 'i' } },
+            { country: { $regex: q, $options: 'i' } },
+            { category: { $regex: q, $options: 'i' } }
+        ]
+    }).populate('reviews');
+    allListings.forEach(listing => {
+        if (listing.reviews.length > 0) {
+            listing.averageRating = listing.reviews.reduce((acc, review) => acc + review.rating, 0) / listing.reviews.length;
+        } else {
+            listing.averageRating = 0;
+        }
+    });
+    res.render('listings/index', { allListings, page: 1, hasMore: false });
+};
+
+// Destinations
+module.exports.destinations = async (req, res) => {
+    const allListings = await Listing.find({});
+    res.render('listings/destinations', { allListings });
 };

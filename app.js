@@ -10,16 +10,20 @@ const expressErrors = require('./utils/expressError');
 const passport = require('passport');
 const lS = require('passport-local');
 const User = require('./models/user');
+const helmet = require('helmet');
+const sanitize = require('mongo-sanitize');
+const { doubleCsrf } = require("csrf-csrf");
+const crypto = require('crypto');
 
-
-const listingsR = require('./routes/listing');
-const reviewsR = require('./routes/review');
-const usersR = require('./routes/user');
+const routes = require('./routes');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
+const cookieParser = require('cookie-parser');
+const Listing = require('./models/listing');
 
-
-
+// Connect to MongoDB
+const dbUrl = process.env.MONGO_URI || 'mongodb+srv://mr_adex:aditya@cluster0.nuenf5q.mongodb.net/?appName=Cluster0';
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,37 +32,49 @@ app.set('view engine', 'ejs');
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride('_method'));   // enables PUT & DELETE via ?_method=
+app.use(methodOverride('_method'));
+app.use(helmet({
+    contentSecurityPolicy: false,
+}));
+// app.use((req, res, next) => {
+//     req.body = sanitize(req.body);
+//     req.query = sanitize(req.query);
+//     next();
+// });
 
 // ejs-locals for all ejs templates:
 app.engine('ejs', ejsMate);
-
-
-
-// app.get('/fakeUser', async (req, res) => {
-//     try {
-//         const fakeUser = new User({ email: 'aps@gmail.com', username: 'aps' });
-//         const registeredUser = await User.register(fakeUser, 'chicken');
-//         res.send(registeredUser);
-//     } catch (err) {
-//         res.send(err);
-//     }
-// });
 
 // Session configuration
 const sessionOption = {
     secret: "My Super secret code",
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: dbUrl }),
     cookie: {
         httpOnly: true,
-        expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 1 week
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 };
 
+app.use(cookieParser("My Super secret code"));
 app.use(session(sessionOption));
 app.use(flash());
+
+const doubleCsrfUtilities = doubleCsrf({
+    getSecret: () => "My Super secret code",
+    cookieName: "x-csrf-token",
+    cookieOptions: {
+        sameSite: "lax",
+        path: "/",
+        secure: false,
+    },
+    size: 64,
+    ignoredMethods: ["GET", "HEAD", "OPTIONS"],
+    getTokenFromRequest: (req) => req.body._csrf,
+    getSessionIdentifier: (req) => req.session.csrfSecret || (req.session.csrfSecret = crypto.randomBytes(32).toString('hex')),
+});
 
 // Passport configuration
 app.use(passport.initialize());
@@ -70,16 +86,10 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
+  res.locals.csrfToken = doubleCsrfUtilities.generateCsrfToken(req, res);
+  res.locals.user = req.user;
+  res.locals.currentUser = req.user;
   next();
-});
-
-// expose the current request path and authenticated user to all templates
-// This must run after session & passport middleware so `req.user` is populated
-app.use((req, res, next) => {
-        res.locals.currentPath = req.path;
-        res.locals.user = req.user;
-        res.locals.currentUser = req.user;
-        next();
 });
 
 app.use('/favicon.ico', (req, res) => res.sendStatus(204));
@@ -92,26 +102,40 @@ app.use((req, res, next) => {
     next();
 });
 
-// Redirect root URL to the listings index (All Listings)
+// Redirect root URL to the listings index
 app.get('/', (req, res) => {
     res.redirect('/listings');
 });
 
-// Connect to MongoDB (read from MONGO_URI or fallback to local)
-const dbUrl = process.env.MONGO_URI || 'mongodb://localhost:27017/wonderlust';
+// Middleware to set currentPath
+app.use((req, res, next) => {
+  res.locals.currentPath = req.path;
+  next();
+});
+
+// Middleware to fetch all unique categories
+app.use(async (req, res, next) => {
+  try {
+    const categories = await Listing.distinct('category');
+    res.locals.categories = categories;
+    next();
+  } catch (err) {
+    console.error('Error fetching categories:', err);
+    res.locals.categories = [];
+    next();
+  }
+});
+
+// All Listing and Operation
+app.use('/', routes);
+
+// Connect to MongoDB
 mongoose.connect(dbUrl);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
     console.log('✅ MongoDB connected:', dbUrl);
 });
-
-
-
-// All Listing and Operation
-app.use('/listings', listingsR);
-app.use('/listings/:id/reviews', reviewsR);
-app.use('/', usersR);
 
 // Catch-all for unknown routes
 app.use((req, res, next) => {
@@ -120,14 +144,15 @@ app.use((req, res, next) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-    console.log(err);
     if (!(err instanceof expressErrors)) {
         err = new expressErrors(500, 'Something went wrong!');
+    }
+    if (err.statusCode !== 404) {
+        console.log(err);
     }
     const { statusCode = 500, message = 'Something went wrong!' } = err;
     res.status(statusCode).render('error', { err: { statusCode, message, stack: err.stack } });
 });
-
 
 // Server start
 const PORT = process.env.PORT || 8080;

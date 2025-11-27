@@ -2,130 +2,54 @@
 <style>
   
 </style>
-  <div class="container py-5">
-    <!-- <h1 class="text-center mb-5 text-primary fw-bold">All Listings</h1> -->
-    <div class="filters">
-      <div class="filter">
-        <i class="fa-solid fa-mountain"></i>
-        <p>Adventure</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-water"></i>
-        <p>Waterfront</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-tree"></i>
-        <p>Nature</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-city"></i>
-        <p>City</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-umbrella-beach"></i>
-        <p>Beach</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-person-hiking"></i>
-        <p>Trekking</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-bicycle"></i>
-        <p>Bike Tours</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-car"></i>
-        <p>Road Trip</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-utensils"></i>
-        <p>Food</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-camera"></i>
-        <p>Photography</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-music"></i>
-        <p>Music</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-wine-bottle"></i>
-        <p>Nightlife</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-snowflake"></i>
-        <p>Snow</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-sun"></i>
-        <p>Sunny</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-hotel"></i>
-        <p>Hotels</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-campground"></i>
-        <p>Glamping</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-house"></i>
-        <p>Home Stay</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-paw"></i>
-        <p>Pet Friendly</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-plane-departure"></i>
-        <p>Travel</p>
-      </div>
-
-      <div class="filter">
-        <i class="fa-solid fa-star"></i>
-        <p>Top Rated</p>
-      </div>
+  
+<div class="container py-5">
+    <div class="form-check form-switch mb-4">
+        <input class="form-check-input" type="checkbox" id="tax-toggle">
+        <label class="form-check-label" for="tax-toggle">Show Taxes</label>
     </div>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
-      <% for (let listing of allListings) { %>
-        <div class="col">
-          <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
-            <div class="card border-0 shadow-sm rounded-4 h-100 listing-card">
-              <img
-                src="<%= listing.image && listing.image.url ? listing.image.url : listing.image %>"
-                class="card-img-top rounded-top-4"
-                alt="Image of <%= listing.title %>"
-                style="height: 16rem; object-fit: cover;"
-              >
-
-              <div class="card-body">
-                <h5 class="card-title fw-semibold"><%= listing.title %></h5>
-                <p class="card-text text-muted">
-                  ₹<%= listing.price.toLocaleString("en-IN") %>/night
-                </p>
-              </div>
+    <div class="row g-4" id="listings-container" data-page="<%= page %>">
+        <% for (let listing of allListings) { %>
+        <div class="col-lg-4 col-md-6">
+            <div class="card listing-card h-100 border-0 shadow-sm">
+                <div class="position-relative">
+                    <img
+                        src="<%= listing.image && listing.image.url ? listing.image.url : '/images/default.jpg' %>"
+                        class="card-img-top"
+                        alt="Image of <%= listing.title %>"
+                        style="height: 200px; object-fit: cover;"
+                    >
+                    <div class="card-img-overlay d-flex align-items-start justify-content-end p-2">
+                        <span class="badge bg-primary"><%= listing.category %></span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><%= listing.title %></h5>
+                    <p class="card-text text-muted mb-2">
+                        <i class="fas fa-map-marker-alt me-1"></i><%= listing.location %>, <%= listing.country %>
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <span class="h6 text-primary mb-0">₹<%= listing.price.toLocaleString("en-IN") %></span>
+                            <small class="text-muted">/ night</small>
+                            <span class="tax-info text-muted ms-1" style="display: none;">+18% GST</span>
+                        </div>
+                        <% if (listing.averageRating > 0) { %>
+                            <div class="text-warning">
+                                <i class="fas fa-star"></i> <%= listing.averageRating.toFixed(1) %>
+                            </div>
+                        <% } else { %>
+                            <small class="text-muted">No reviews</small>
+                        <% } %>
+                    </div>
+                    <a href="/listings/<%= listing._id %>" class="btn btn-primary btn-sm w-100">View Details</a>
+                </div>
             </div>
-          </a>
         </div>
-      <% } %>
+        <% } %>
     </div>
-  </div>
+
+</div>
+
+
+

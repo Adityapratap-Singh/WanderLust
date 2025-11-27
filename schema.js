@@ -6,16 +6,19 @@ const listingSchema = Joi.object({
         description: Joi.string().required(),
         location: Joi.string().required(),
         country: Joi.string().required(),
-        price: Joi.number().min(0).required()
-    }).required()
-});
+        price: Joi.number().min(0).required(),
+        category: Joi.string().required()
+    }).required(),
+    _csrf: Joi.string().optional()
+}).unknown(true);
 
 const reviewSchema = Joi.object({
     review: Joi.object({
         rating: Joi.number().min(1).max(5).required(),
         comment: Joi.string().required()
-    }).required()
-});
+    }).required(),
+    _csrf: Joi.string().optional()
+}).unknown(true);
 
 const userSchema = Joi.object({
     username: Joi.string()

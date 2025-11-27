@@ -1,0 +1,176 @@
+<% layout("layouts/boilerPlate") %>
+
+<div class="container my-5">
+    <!-- Hero Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10">
+            <div class="text-center">
+                <h1 class="display-4 fw-bold mb-4">How Can We Help?</h1>
+                <p class="lead fs-5 text-muted">Find answers to common questions and get the support you need</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4">
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control border-0 bg-light" placeholder="Search for help..." aria-label="Search help">
+                        <button class="btn btn-primary px-4" type="button">
+                            <i class="fa-solid fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Categories -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Browse by Category</h2>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm text-center hover-card">
+                <div class="card-body p-4">
+                    <i class="fa-solid fa-user text-primary fs-1 mb-3"></i>
+                    <h5 class="card-title fw-bold">Getting Started</h5>
+                    <p class="card-text text-muted">New to Ghoomo? Learn the basics.</p>
+                    <a href="#getting-started" class="btn btn-outline-primary">Learn More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm text-center hover-card">
+                <div class="card-body p-4">
+                    <i class="fa-solid fa-home text-success fs-1 mb-3"></i>
+                    <h5 class="card-title fw-bold">Managing Listings</h5>
+                    <p class="card-text text-muted">Create, edit, and manage your properties.</p>
+                    <a href="#listings" class="btn btn-outline-success">Learn More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm text-center hover-card">
+                <div class="card-body p-4">
+                    <i class="fa-solid fa-credit-card text-info fs-1 mb-3"></i>
+                    <h5 class="card-title fw-bold">Payments & Booking</h5>
+                    <p class="card-text text-muted">Everything about payments and reservations.</p>
+                    <a href="#payments" class="btn btn-outline-info">Learn More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm text-center hover-card">
+                <div class="card-body p-4">
+                    <i class="fa-solid fa-shield-alt text-warning fs-1 mb-3"></i>
+                    <h5 class="card-title fw-bold">Safety & Security</h5>
+                    <p class="card-text text-muted">Stay safe while traveling and hosting.</p>
+                    <a href="#safety" class="btn btn-outline-warning">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popular Questions -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">Frequently Asked Questions</h2>
+
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item border-0 mb-3">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    <i class="fa-solid fa-question-circle me-2 text-primary"></i>How do I create a listing?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    To create a listing, first sign up for an account, then click "Add Listing" in the navigation. Fill out the form with your property details, upload photos, and set your pricing. Your listing will be reviewed and published within 24 hours.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-0 mb-3">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    <i class="fa-solid fa-question-circle me-2 text-primary"></i>How do I contact a host?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Once you find a listing you're interested in, click on it to view details. You'll find a contact form or messaging system to reach out to the host directly through our platform.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-0 mb-3">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    <i class="fa-solid fa-question-circle me-2 text-primary"></i>What are the cancellation policies?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Cancellation policies vary by host. Most offer flexible cancellation up to 24 hours before check-in. Always check the specific policy for each booking in the listing details.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-0 mb-3">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                    <i class="fa-solid fa-question-circle me-2 text-primary"></i>How do reviews work?
+                                </button>
+                            </h2>
+                            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    After your stay, you'll receive an email invitation to leave a review. Reviews help other travelers make informed decisions and help hosts improve their services.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Support -->
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4 text-center">
+                <div class="card-body p-5">
+                    <i class="fa-solid fa-headset text-primary fs-1 mb-3"></i>
+                    <h3 class="card-title mb-3">Still Need Help?</h3>
+                    <p class="card-text mb-4">Our support team is here to help you with any questions or issues you might have.</p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a href="/contact" class="btn btn-primary btn-lg px-4">
+                            <i class="fa-solid fa-envelope me-2"></i>Contact Support
+                        </a>
+                        <a href="tel:+1-800-WANDER" class="btn btn-outline-primary btn-lg px-4">
+                            <i class="fa-solid fa-phone me-2"></i>Call Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.hover-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+</style>

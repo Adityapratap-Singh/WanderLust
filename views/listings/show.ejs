@@ -6,19 +6,22 @@
 
       <!-- Listing Card -->
       <div class="card shadow-lg border-0 rounded-4">
-        <img src="<%= foundListing.image && foundListing.image.url ? foundListing.image.url : foundListing.image %>"
-             class="card-img-top img-fluid rounded-top listing-hero" 
+        <img src="<%= foundListing.image && foundListing.image.url ? foundListing.image.url : '/images/default.jpg' %>"
+             class="card-img-top img-fluid rounded-top listing-hero"
              alt="Image of <%= foundListing.title %>">
 
         <div class="card-body">
-          <h2 class="card-title text-center mb-3 text-primary"><%= foundListing.title %></h2>
+          <h2 class="card-title text-center mb-3 text"><%= foundListing.title %></h2>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <strong>Posted by:</strong> 
               <i><u><span class="text-muted"><%= foundListing.owner ? foundListing.owner.username : 'Unknown' %></span></i></u>
             </li>
             <li class="list-group-item"><strong>Description:</strong> <%= foundListing.description %></li>
-            <li class="list-group-item"><strong>Price:</strong> ₹<%= foundListing.price.toLocaleString("en-IN") %></li>
+            <li class="list-group-item">
+              <strong>Price:</strong> ₹<%= foundListing.price.toLocaleString("en-IN") %>
+              <span class="tax-info" style="display: none;">+18% GST</span>
+            </li>
             <li class="list-group-item"><strong>Location:</strong> <%= foundListing.location %></li>
             <li class="list-group-item"><strong>Country:</strong> <%= foundListing.country %></li>
             <li class="list-group-item"><strong>Average Rating:</strong> <%= averageRating.toFixed(1) %> ⭐</li>
@@ -33,6 +36,7 @@
               <form action="/listings/<%= foundListing._id %>?_method=DELETE" 
                     method="POST" 
                     style="display:inline;">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <button type="submit" 
                         onclick="return confirm('Are you sure you want to delete this listing?');" 
                         class="btn btn-danger">
@@ -44,32 +48,16 @@
         </div>
       </div>
 
-      <hr>
-      <h4>Where you'll be</h4>
-      <div id="map" style="width: 100%; height: 400px;"></div>
-      <hr>
+    
 
-      <!-- Review Section -->
-      <% if (currentUser) { %>
-        <div class="mt-5">
-          <legend>Leave a Review</legend>
-          <form action="/listings/<%= foundListing._id %>/reviews" 
-                method="POST" 
-                class="needs-validation mt-3" novalidate>
-    <script>
-        mapboxgl.accessToken = '<%= process.env.MAP_TOKEN %>';
-        const map = new mapboxgl.Map({
-            container: 'map', // container ID
-            style: 'mapbox://styles/mapbox/streets-v12', // style URL
-            center: [<%= foundListing.geometry.coordinates %>], // starting position [lng, lat]
-            zoom: 9 // starting zoom
-        });
-
-        const marker = new mapboxgl.Marker({color: 'red'})
-            .setLngLat([<%= foundListing.geometry.coordinates %>])
-            .setPopup(new mapboxgl.Popup({offset: 25}).setHTML("<h5><%= foundListing.location %></h5><p>Exact location will be provided after booking</p>"))
-            .addTo(map);
-    </script>
+    <!-- Review Section -->
+    <% if (currentUser) { %>
+      <div class="mt-5">
+        <legend>Leave a Review</legend>
+        <form action="/listings/<%= foundListing._id %>/reviews" 
+              method="POST" 
+              class="needs-validation mt-3" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <div class="mb-3">
         <!-- <label for="rating" class="form-label">Rating:</label>
         <input type="range" class="form-range" min="1" max="5" id="rating" name="review[rating]" required> -->
@@ -115,6 +103,7 @@
                 <p><strong>Comment:</strong> <%= review.comment %></p>
                 <% if (currentUser && review.author && review.author._id.equals(currentUser._id)) { %>
                   <form action="/listings/<%= foundListing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" style="display:inline;">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this Review?');">
                       <i class="fa-regular fa-trash-can"></i> Delete
                     </button>
@@ -125,4 +114,3 @@
         </div>
     <% } %>
 </div>
-

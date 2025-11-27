@@ -1,53 +1,27 @@
-require('dotenv').config();
+
 const mongoose = require('mongoose');
-const initData = require('./data');
-const Listing = require('../models/listing');
+const Listing = require('../models/listing.js');
 
-const dbUrl = process.env.MONGO_URI || 'mongodb://localhost:27017/wonderlust';
+const dbUrl = process.env.MONGO_URI || 'mongodb+srv://mr_adex:aditya@cluster0.nuenf5q.mongodb.net/?appName=Cluster0';
 
-mongoose.connect(dbUrl)
-  .then(() => console.log('✅ MongoDB connected for seeding:', dbUrl))
-  .catch(err => {
-    console.error('❌ MongoDB connection error (seeding):', err);
-    process.exit(1);
-  });
+mongoose.connect(dbUrl);
 
-const initDB = async () => {
-  try {
-    const OWNER_ID = "6905fa24b41d7941d874c4bd"; // your new owner ID
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+    console.log('✅ MongoDB connected:', dbUrl);
+    updateListings();
+});
 
-    for (const item of initData.data) {
-      const existing = await Listing.findOne({ title: item.title });
-
-      if (existing) {
-        // ✅ Add owner only if it's missing
-        if (!existing.owner) {
-          existing.owner = OWNER_ID;
-          await existing.save();
-          console.log(`🛠️ Added owner to existing listing: ${item.title}`);
-        } else {
-          console.log(`⚠️ Owner already exists for: ${item.title}`);
+const updateListings = async () => {
+    const allListings = await Listing.find({});
+    for (let listing of allListings) {
+        if (typeof listing.image === 'string') {
+            listing.image = { url: listing.image, filename: '' };
+            await listing.save();
+            console.log(`Updated listing: ${listing.title}`);
         }
-        continue;
-      }
-
-      // ✅ Create new listing with owner
-      const newListing = new Listing({
-        ...item,
-        owner: OWNER_ID,
-      });
-
-      await newListing.save();
-      console.log(`✅ Inserted new listing: ${item.title}`);
     }
-
-    console.log('🎉 Database seeding complete.');
-  } catch (err) {
-    console.error('🚨 Seeding error:', err);
-  } finally {
-    await mongoose.disconnect();
-    process.exit(0);
-  }
+    console.log('All listings updated!');
+    mongoose.connection.close();
 };
-
-initDB();

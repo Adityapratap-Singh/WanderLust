@@ -3,6 +3,7 @@
 <div class="add-container container py-5">
     <div class="col-lg-6 col-md-10 mx-auto p-4 add-card shadow-lg rounded-4">
         <form action="/login" method="POST" class="needs-validation" novalidate>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <h1 class="offset-3">Welcome Back</h1>
 
             <!-- Username -->

@@ -15,13 +15,22 @@ router.route('/')
 // New
 router.get('/new', isLoggedIn, listingController.renderNewForm);
 
+// Destinations
+router.get('/destinations', wrapAsync(listingController.destinations));
+
+// Category
+router.get('/category/:category', wrapAsync(listingController.filterByCategory));
+
+// Search
+router.get('/search', wrapAsync(listingController.search));
+
+// Edit
+router.get('/:id/edit', isLoggedIn, isOwner, wrapAsync(listingController.renderEditForm));
+
 // Show, Update, and Delete
 router.route('/:id')
     .get(wrapAsync(listingController.showListing))
     .put(isLoggedIn, isOwner, upload.single('listing[image]'), validateListing, wrapAsync(listingController.updateListing))
     .delete(isLoggedIn, isOwner, wrapAsync(listingController.deleteListing));
-
-// Edit
-router.get('/:id/edit', isLoggedIn, isOwner, wrapAsync(listingController.renderEditForm));
 
 module.exports = router;

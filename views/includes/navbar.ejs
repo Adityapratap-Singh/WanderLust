@@ -1,37 +1,61 @@
-<nav class="navbar navbar-expand-md custom-navbar border-bottom sticky-top">
+<nav class="navbar navbar-expand-lg custom-navbar">
   <div class="container-fluid">
-    <a class="navbar-brand fw-bold text-light" href="/">
-      <i class="fa-solid fa-street-view me-2"></i>WanderLust
-    </a>
-
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-      data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-      aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" href="/">Ghoomo</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-      <div class="navbar-nav ms-3">
-        <a class="nav-link <%= currentPath === '/' ? 'active' : '' %>" href="/">Home</a>
-        <a class="nav-link <%= currentPath.startsWith('/listings') && currentPath !== '/listings/new' ? 'active' : '' %>" href="/listings">All Listings</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a class="nav-link <%= currentPath === '/' ? 'active' : '' %>" href="/">Home</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle <%= currentPath.startsWith('/listings') ? 'active' : '' %>" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Category 
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/listings">All Listing</a></li>
+            <% categories.forEach(category => { %>
+              <li><a class="dropdown-item" href="/listings/category/<%= encodeURIComponent(category) %>"><%= category %></a></li>
+            <% }); %>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= currentPath === '/listings/destinations' ? 'active' : '' %>" href="/listings/destinations">Destinations</a>
+        </li>
         <% if (currentUser) { %>
-          <a class="nav-link <%= currentPath === '/listings/new' ? 'active' : '' %>" href="/listings/new">Add New Listing</a>
-        <% } else { %>
-          <!-- If not logged in, Add New Listing sends user to login (login required) -->
-          <a class="nav-link text-muted" href="/login" title="Login to add a new listing">Add New Listing</a>
+        <li class="nav-item">
+          <a class="nav-link <%= currentPath === '/listings/new' ? 'active' : '' %>" href="/listings/new">Add Listing</a>
+        </li>
         <% } %>
-      </div>
-      <div class="navbar-nav ms-auto">
-        <% if(currentUser) { %>
-          <!-- When logged in, only show Logout (no Login/Signup) -->
-          <form action="/logout" method="POST" class="d-inline">
-            <button class="nav-link btn btn-link" type="submit">Logout</button>
-          </form>
-        <% } else { %>
-          <!-- NOTE: signup route is defined as /signUp in routes, link to that path -->
-          <a class="nav-link <%= currentPath === '/signUp' ? 'active' : '' %>" href="/signUp">Sign up</a>
-          <a class="nav-link <%= currentPath === '/login' ? 'active' : '' %>" href="/login">Login</a>
-        <% } %>
+      </ul>
+      <div class="d-flex align-items-center">
+        <button id="theme-toggle" class="theme-toggle me-2">
+          <i class="fas fa-sun"></i>
+        </button>
+        <form class="d-flex search-form me-2" action="/listings/search" method="GET">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
+          <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+        <div class="user-menu dropdown">
+          <% if(currentUser) { %>
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="#">Profile</a></li>
+              <li><a class="dropdown-item" href="#">Settings</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form action="/logout" method="POST">
+                  <button type="submit" class="dropdown-item">Logout</button>
+                </form>
+              </li>
+            </ul>
+          <% } else { %>
+            <a href="/login" class="btn btn-primary">Login</a>
+          <% } %>
+        </div>
       </div>
     </div>
   </div>
