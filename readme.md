@@ -154,7 +154,7 @@ You can run the server in two modes:
     npm start
     ```
 
-The application will be running at `http://localhost:8080`.
+The application will be running at `https://ghoomo.onrender.com`.
 
 ---
 
