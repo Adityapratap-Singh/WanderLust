@@ -23,7 +23,7 @@ const cookieParser = require('cookie-parser');
 const Listing = require('./models/listing');
 
 // Connect to MongoDB
-const dbUrl = process.env.MONGO_URI || 'mongodb+srv://mr_adex:aditya@cluster0.nuenf5q.mongodb.net/?appName=Cluster0';
+const dbUrl = process.env.MONGO_URI;
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,11 +36,6 @@ app.use(methodOverride('_method'));
 app.use(helmet({
     contentSecurityPolicy: false,
 }));
-// app.use((req, res, next) => {
-//     req.body = sanitize(req.body);
-//     req.query = sanitize(req.query);
-//     next();
-// });
 
 // ejs-locals for all ejs templates:
 app.engine('ejs', ejsMate);
